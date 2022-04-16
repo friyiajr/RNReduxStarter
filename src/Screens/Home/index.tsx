@@ -3,28 +3,38 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import React from 'react';
 
 import {View, Text, StyleSheet, Button} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {incrementIndex} from '../../Redux/Pokemon/Pokemon.reducer';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  decrementIndex,
+  incrementIndex,
+} from '../../Redux/Pokemon/Pokemon.reducer';
 import Pokemon from '../Pokemon';
+import homeSelector from './selector/Home.selector';
 
 const Home = () => {
   const nav = useNavigation<StackNavigationProp<any>>();
   const dispatch = useDispatch();
 
+  const {index} = useSelector(homeSelector);
+
   const increment = () => {
     dispatch(incrementIndex());
   };
 
+  const decrement = () => {
+    dispatch(decrementIndex());
+  };
+
+  const goToPokemon = () => {
+    nav.push(Pokemon.routeName, {pokemonIndex: index});
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Hello</Text>
-      <Button
-        title="Go To Next"
-        onPress={() => {
-          // nav.push(Pokemon.routeName);
-          increment();
-        }}
-      />
+      <Text>Your Current Pokemon is: {index}</Text>
+      <Button title="Increment" onPress={increment} />
+      <Button title="Decrement" onPress={decrement} />
+      <Button title="See Your Pokemon" onPress={goToPokemon} />
     </View>
   );
 };
